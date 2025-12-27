@@ -1,7 +1,7 @@
 ---
 title: Thoughts on dataset distillation
 date: 2025-02-21
-draft: false
+tags: "llm"
 ---
 
 ![Dataset Distillation](ramblings/images/dataset_distillation.png)

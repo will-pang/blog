@@ -1,7 +1,7 @@
 ---
 title: To RAG or not to RAG
 date: 2025-02-14
-draft: false
+tags: "llm"
 ---
 
 ![RAG](ramblings/images/rag-library.png)

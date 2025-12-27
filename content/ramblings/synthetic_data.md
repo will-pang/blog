@@ -1,7 +1,7 @@
 ---
 title: Generating good synthetic data
 date: 2025-02-28
-draft: false
+tags: "llm"
 ---
 
 ![Synthetic Data](ramblings/images/synthetic_data.png)
