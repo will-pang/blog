@@ -4,7 +4,7 @@ date: 2025-02-21
 tags: "llm"
 ---
 
-![Dataset Distillation](ramblings/images/dataset_distillation.png)
+![Dataset Distillation](images/dataset_distillation.png)
 
 Lately, I’ve been reading a bit about dataset distillation, which is the idea of creating a small synthetic dataset from a large real dataset (e.g., chest X-rays) and using the smaller synthetic dataset to train machine learning models (e.g., binary classification of lung cancer using chest X-rays). The premise is quite fascinating: basically, you could chop and dice a large dataset, extract all its important components (cough _gradients_), train a ML model on just the important components, and then get a light-weight model that gets you most of the way.
 

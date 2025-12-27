@@ -4,7 +4,7 @@ date: 2025-02-14
 tags: "llm"
 ---
 
-![RAG](ramblings/images/rag-library.png)
+![RAG](images/rag_library.png)
 
 Some random thoughts on RAG and healthcare: Lately I’ve been reading a bit of Chip Huyen’s blog, and she gave the analogy that RAG can be thought of as “feature engineering in classical models”. This was a helpful analogy, and reminded me of how even with classical ML models in the healthcare space, we struggle with whether to deploy an algorithmic approach to cull features (think Lasso), or rely on medical expertise to tell us which features they’ve seen clinically to be important. From experience, it’s often a mixture of both. 
 

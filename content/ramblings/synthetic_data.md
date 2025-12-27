@@ -4,7 +4,7 @@ date: 2025-02-28
 tags: "llm"
 ---
 
-![Synthetic Data](ramblings/images/synthetic_data.png)
+![Synthetic Data](images/synthetic_data.png)
 
 A few weeks ago, I read a paper by Huan He and team on creating synthetic EHR data, which made me think deeper about the potential impact of generating good synthetic data, especially in the generative AI healthcare space where obtaining any type of data is hard yet necessary to train/fine-tune powerful foundation models.
 
