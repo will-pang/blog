@@ -1,8 +1,11 @@
 ---
-title: condig.prod
+title: Welcome!
 sort:
   by: date
   order: desc
 ---
 
-A first stab at putting ML systems to production for healthcare.
+Thoughts on ML & AI and how to deploy responsibly in healthcare.
+
+- `ramblings`
+- `osler-mcp`
