@@ -4,6 +4,8 @@ date: 2025-02-28
 draft: false
 ---
 
+![Dataset Distillation](images/dataset_distillation.png)
+
 A few weeks ago, I read a paper by Huan He and team on creating synthetic EHR data, which made me think deeper about the potential impact of generating good synthetic data, especially in the generative AI healthcare space where obtaining any type of data is hard yet necessary to train/fine-tune powerful foundation models.
 
 Perhaps more relevant in the world of scribing and voice AI, being able to simulate a conversation between a doctor and patient using chart notes is extremely valuable. In other words, we want to be able to generate a synthetic full-length conversation from provider notes, and using the synthetic-full length conversation be able to generate synthetic provider notes that matches the original provider notes.
