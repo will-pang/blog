@@ -5,7 +5,7 @@ sort:
   order: desc
 ---
 
-*Bridging the gap between ML/AI research and real-life deployment in healthcare.*
+A blog on bridging the gap between ML/AI research and real-life deployment in healthcare. And other fun stuff.
 
 - `ramblings`
 - `osler-mcp`
