@@ -1,11 +1,15 @@
 ---
-title: Synthetic Data
-date: 2025-02-21
+title: Generating good synthetic data
+date: 2025-02-28
 draft: false
 ---
 
-Lately, I’ve been reading a bit about dataset distillation, which is the idea of creating a small synthetic dataset from a large real dataset (e.g., chest X-rays) and using the smaller synthetic dataset to train machine learning models (e.g., binary classification of lung cancer using chest X-rays). The premise is quite fascinating: basically, you could chop and dice a large dataset, extract all its important components (cough _gradients_), train a ML model on just the important components, and then get a light-weight model that gets you most of the way.
+![Synthetic Data](ramblings/images/synthetic_data.png)
 
-While there are a plethora of fascinating downstream applications — imagine research accelerating because we are able to share a “compressed” synthetic dataset as opposed to the entire corpus of X-Rays from a database much more easily — I think the upstream impact on core systems, as Yongfeng Zhang has noted, is an equally exciting place to ponder. For instance, if we know that the goal is to collect a smaller but representative enough sample in order to get some desirable performance for a predictive model, how can we build a database system that can do just that (as opposed to current database systems in ML, which is focused on streaming as much data as possible in an optimal way)?
+A few weeks ago, I read a paper by Huan He and team on creating synthetic EHR data, which made me think deeper about the potential impact of generating good synthetic data, especially in the generative AI healthcare space where obtaining any type of data is hard yet necessary to train/fine-tune powerful foundation models.
 
-That being said, I think there’s still much we don’t understand about data distillation. How can — in distillation lingo — the student (smaller synthetic model) learn so well from the teacher (larger model), especially with a much smaller set of training data? I think the same question on "learning efficacy" can be asked for prompting techniques, such as Chain-Of-Thoughts and Few-Short Learning. More to ponder…
+Perhaps more relevant in the world of scribing and voice AI, being able to simulate a conversation between a doctor and patient using chart notes is extremely valuable. In other words, we want to be able to generate a synthetic full-length conversation from provider notes, and using the synthetic-full length conversation be able to generate synthetic provider notes that matches the original provider notes.
+
+One paper that attempts to tackle this problem is titled “NoteChat: A Dataset of Synthetic Patient-Physican Conversatons Conditioned on Clinical Notes”, where the authors used a cooperative multi-agent framework to generate synthetic patient-physician conversations. The “secret sauce” of the paper was to break up the task into three components: (1) a planning stage, where the LLM is instructed to basically storyboard/do a high-level planning of the conversation (for example, asking about where it hurts, how long you’ve been experiencing the pain etc.) (2) a roleplaying stage, where the LLM essentially fills in the actual dialogues given by the storyboard (3) a polishing stage, where the LLM is tasked with making the conversation more realistic (e.g., making the dialogue more colloquial and more back-and-forth). To my surprise, this entire workflow was generated with GPT-3.5-turbo, and outperformed GPT4 and other models!
+
+The authors also asked medical professionals to evaluate the conversation — one interesting feedback that caught my eye was that the synthetic conversations often “covered to much information from the clinical note compared to real-world conversations”. Although this was not particularly surprising, it is an interesting problem that I think is more challenging in the healthcare space: not only do we need to provide the right context, we need to know WHEN to inject the correct context, as well as HOW MUCH context to provide.
