@@ -5,7 +5,7 @@ sort:
   order: desc
 ---
 
-Thoughts on ML & AI and how to deploy responsibly in healthcare.
+Bridging the gap between ML/AI research and real-life deployment in healthcare.
 
 - `ramblings`
 - `osler-mcp`
