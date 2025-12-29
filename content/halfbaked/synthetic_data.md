@@ -1,5 +1,5 @@
 ---
-title: Generating good synthetic data
+title: Generating synthetic data
 date: 2025-02-28
 tags: "llm"
 ---
