@@ -1,5 +1,5 @@
 ---
-title: Benchmarking MCPs?
+title: Benchmarking MCPs
 date: 2026-12-28
 tags:
   - mcp
@@ -40,5 +40,6 @@ This would likely _not_ invoke any querying of model lineage, but simply rely on
 
 While this is far from a rigorous study on tool choice by LLM agents, I had a few quick takeaways:
 
-- The power of a well-curated file system: The most accurate responses came from table names that were clear and non-repetitive. This was evident by how confident the LLM was in its response simply from reading the database schema and getting a peak into the table columns/structure. For questions that _did not_ require relational joins and only aggreation/filtering logic, LLMs performed quite well.
-- More relational context might **not** help: Initially, I was convinced that I could develop clever ways to force the LLM to "think/plan" with relational context in mind. But as I did more testing, I started to wonder whether better/more detailed prompt engineering and scaffolding would only lead to [overfitting](https://www.ibm.com/think/topics/overfitting). To truly take advantage of relational context, this might require something like a [graph-based database](https://arxiv.org/pdf/2504.10950).
+- The power of a well-curated file system/table schema: The most accurate responses came from table names that were clear and non-repetitive. This was evident by how confident the LLM was in its response simply from reading the database schema and getting a peak into the table columns/structure. For questions that require minimal joins and leaned heavier on aggreation/filtering/window functions, LLMs performed quite well.
+- More relational context might **not** helpful: Initially, I was convinced that I could develop clever ways to force the LLM to "think/plan" with relational context in mind. But as I did more testing, it was not clear to me whether more sophisticated prompt engineering and scaffolding would yield meaningful gains, or only lead to [overfitting](https://www.ibm.com/think/topics/overfitting).
+- Understanding relational data is still hard: In order for the LLM to effectively navigate through tables that are inherently relational, a graph perspective might be needed (I like to think of this as seeing things in Cartesian system vs Polar coordinates). However, graph databases come with its own set of [challenges](https://arxiv.org/pdf/2504.10950) and will probably still require consistent table pruning before it can be used effectively with LLMs.
