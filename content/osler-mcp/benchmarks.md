@@ -1,5 +1,5 @@
 ---
-title: Benchmarking MCPs
+title: On MCP Tools
 date: 2026-12-28
 tags:
   - mcp
