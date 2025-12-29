@@ -38,7 +38,7 @@ This would likely _not_ invoke any querying of model lineage, but simply rely on
 
 ### 🧠 Concluding Thoughts
 
-While this is far from a rigorous study on tool choice by LLM agents, I had a few quick takeaways:
+While this is far from a rigorous study on tool choice by LLM agents, I had a few quick thoughts:
 
 - The power of a well-curated file system/table schema: The most accurate responses came from table names that were clear and non-repetitive. This was evident by how confident the LLM was in its response simply from reading the database schema and getting a peak into the table columns/structure. For questions that require minimal joins and leaned heavier on aggreation/filtering/window functions, LLMs performed quite well.
 - More relational context might **not** helpful: Initially, I was convinced that I could develop clever ways to force the LLM to "think/plan" with relational context in mind. But as I did more testing, it was not clear to me whether more sophisticated prompt engineering and scaffolding would yield meaningful gains, or only lead to [overfitting](https://www.ibm.com/think/topics/overfitting).
