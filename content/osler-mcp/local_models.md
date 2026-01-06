@@ -15,7 +15,7 @@ After some quick research, I decided to go with [Ollama](http://ollama.com) for 
 
 ### All benchmarks are wrong, but some are useful?
 
-While the data scientist in me would love to have set up some regression-based analysis, I think it's pretty hard to have an apples to apples comparison between models as each model is optimized towards different use cases (e.g., coding agents vs general Q&A) + comes in different shapes & sizes. That being said, I found this [blog post](https://www.docker.com/blog/local-llm-tool-calling-a-practical-evaluation/) on local LLM tool calling from the folks at Docker to be pretty insightful, with my main takeaway being: (1) which model can answer the prompt correctly using the provided tools (2) with the least amount of tool invocation?
+While the data scientist in me would love to have set up some regression-based analysis, I think it's pretty hard to have an apples to apples comparison between models as each model is optimized towards different use cases (e.g., coding agents vs general Q&A) + comes in different shapes & sizes. That being said, I found this [Docker blog post](https://www.docker.com/blog/local-llm-tool-calling-a-practical-evaluation/) on evaluating local LLM tool calling to be pretty insightful, with the main takeaways being: (1) which model can answer the prompt correctly using the provided tools (2) with the least amount of tool invocation?
 
 ### So why open sourced?
 
