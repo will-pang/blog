@@ -1,6 +1,6 @@
 ---
 title: Local Models
-date: 2026-01-04
+date: 2026-01-06
 tags:
   - mcp
   - local
@@ -13,9 +13,9 @@ As proprietary models (e.g., GPT-5.2, Claude Opus 4.5) continue to improve and r
 I wanted to be able to set something up quickly for experimentation, so my main requirements were (1) something that I could setup with relatively little pain (2) something that would be compatible with Apple Silicon chips.
 After some quick research, I decided to go with [Ollama](http://ollama.com) for its simplicity and docker-like interface.
 
-### All benchmarks are wrong, but some are useful?
+### The importance of applied benchmarks
 
-While the data scientist in me would love to have set up some regression-based analysis, I think it's pretty hard to have an apples to apples comparison between models as each model is optimized towards different use cases (e.g., coding agents vs general Q&A) + comes in different shapes & sizes. That being said, I found this [Docker blog post](https://www.docker.com/blog/local-llm-tool-calling-a-practical-evaluation/) on evaluating local LLM tool calling to be pretty insightful, with the main takeaways being: (1) which model can answer the prompt correctly using the provided tools (2) with the least amount of tool invocation?
+While the data scientist in me would love to have set up some regression-based analysis, I think it's pretty hard to have an apples to apples comparison between models as each model is optimized towards different use cases (e.g., coding agents vs general Q&A) + comes in different shapes & sizes. I found this [Docker blog post](https://www.docker.com/blog/local-llm-tool-calling-a-practical-evaluation/) on evaluating local LLM tool calling to be pretty insightful, with the main takeaways being: (1) which model can answer the prompt correctly using the provided tools (2) with the least amount of tool invocation?
 
 ### So why open sourced?
 
