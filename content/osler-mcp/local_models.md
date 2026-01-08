@@ -6,7 +6,7 @@ tags:
   - local
 ---
 
-As proprietary models (e.g., GPT-5.2, Claude Opus 4.5) continue to improve and re-define what is [state-of-the-art](https://gorilla.cs.berkeley.edu/leaderboard.html), it's been equally exciting to see [local models](https://www.linkedin.com/posts/julienchaumond_2026-will-be-the-year-of-local-agents-activity-7411141868303896576-F-VI?utm_source=share&utm_medium=member_desktop&rcm=ACoAABoaxBEBSWALU6nGy5nzir-14PSH_-PQlvQ) improve drastically in capabilities and crush ["older"](https://github.com/idavidrein/gpqa) benchmarks. Admittedly, I haven't played around with open-sourced models since 🦙 Llama was a community favorite (but not [anymore](https://magazine.sebastianraschka.com/p/state-of-llms-2025)), so I was excited to once again hear my laptop fans kick into full gear and (mentally) feel better about the _costly_ capital expenditure of my Macbook Pro (the November 2023 M3 Pro with 18GB RAM, to be exact).
+As proprietary models (e.g., GPT-5.2, Claude Opus 4.5) continue to improve and re-define what is [state-of-the-art](https://gorilla.cs.berkeley.edu/leaderboard.html), it's been equally exciting to see [local models](https://www.linkedin.com/posts/julienchaumond_2026-will-be-the-year-of-local-agents-activity-7411141868303896576-F-VI?utm_source=share&utm_medium=member_desktop&rcm=ACoAABoaxBEBSWALU6nGy5nzir-14PSH_-PQlvQ) improve drastically in capabilities and crush ["older"](https://github.com/idavidrein/gpqa) benchmarks. Admittedly, I haven't played around with open-weight models since 🦙 Llama was a community favorite (but not [anymore](https://magazine.sebastianraschka.com/p/state-of-llms-2025)), so I was excited to once again hear my laptop fans kick into full gear and (mentally) feel better about the _costly_ capital expenditure of my Macbook Pro (the November 2023 M3 Pro with 18GB RAM, to be exact).
 
 ### Setting up the local model
 
@@ -19,13 +19,13 @@ While the data scientist in me would love to have set up some regression-based a
 
 Here's a simple scoring rubric that I ended up going with:
 
-| Criterion               | Description                                                                                                                                                                             |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pass or Fail Response   | Does the outputs match the ["golden"](https://github.com/will-pang/osler-mcp/tree/WP-support-ollama-models/benchmarks/evals/tuva_project_demo/golden_query) SQL query provided by Tuva? |
-| Number of Tools Invoked | How many tools were invoked? In other words, did it take a lot of tokens just to answer a simple question?                                                                              |
-| Partial Credit? (Y/N)   | If I was a nice grader who didn't have to mark 800 exams, would I award a partial score?                                                                                                |
+| Criterion               | Description                                                                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pass or Fail Response   | Does the outputs match the ["golden"](https://github.com/will-pang/osler-mcp/tree/main/benchmarks/evals/tuva_project_demo/golden_query) SQL query provided by Tuva? |
+| Number of Tools Invoked | How many tools were invoked? In other words, did it take a lot of tokens just to answer a simple question?                                                          |
+| Partial Credit? (Y/N)   | If I was a nice grader who didn't have to mark 800 exams, would I award a partial score?                                                                            |
 
-Before a question was called, I appended this simple [prompt](https://github.com/will-pang/osler-mcp/blob/WP-support-ollama-models/benchmarks/prompts/tool_policy.md?plain=1) to instruct the LLM:
+Before a question was called, I appended this simple [prompt](https://github.com/will-pang/osler-mcp/blob/main/benchmarks/prompts/tool_policy.md?plain=1) to instruct the LLM:
 
 > Tool dependency order:
 >
@@ -54,11 +54,13 @@ I then fed the following questions, one at a time:
 | What is the overall readmission rate?                                                                                                                                                                            |
 | What is the healthcare quality measure performance? Provide a breakdown by performance rate                                                                                                                      |
 | What is the distribution of chronic conditions? I want a breakdown of how many patients have 0 chronic conditions, how many patients have 1 chronic condition, how many patients have 2 chronic conditions, etc. |
-| What is the total medicaid spend broken down by member months?                                                                                                                                                   |
+| What is the total medicaid spend broken down by member months?<sup>1</sup>                                                                                                                                       |
 | For quality measures, can you give me a breakdown of exclusion reasons and the count by measure?                                                                                                                 |
 | What is the 30-day readmission rate by MS-DRG? Give me the MS-DRG description as well                                                                                                                            |
 
-[Github Source](https://github.com/will-pang/osler-mcp/blob/WP-support-ollama-models/benchmarks/evals/tuva_project_demo/qsheet.csv)
+<sup>1</sup> This turned out to be an unintentional mistake on my end while copying and pasting. The Tuva Project only has sample Medicare data, so I ended up using this question to evaluate whether the model hallucinated or not.
+
+[Github Source](https://github.com/will-pang/osler-mcp/blob/main/benchmarks/evals/tuva_project_demo/qsheet.csv)
 
 </details>
 
@@ -80,4 +82,12 @@ I then fed the following questions, one at a time:
 | gpt-oss-20b       | 8.4 (4.8 removing the one outlier where **35** calls were made) |
 | gwen2.5-7b        | 3.3                                                             |
 
-### 🤓 Observations
+[Github Source](https://github.com/will-pang/osler-mcp/tree/main/benchmarks/evals/tuva_project_demo/2026-01-06)
+
+### 🤓 A Qualitative Analysis
+
+I will preface by stating the obvious: benchmarking models based on 9 questions is _far_ from a rigorous evaluation, but scoring responses manually and comparing between large(r) and small(er) models was quite an insightful exercise. With that disclaimer out of the way, here were some of my observations:
+
+- Properity/larger models tend to be a lot more verbose, and really wanted to impress (what I mean is when given a relatively terse question, a model like Claude would generate all sort of additional analysis). Smaller models tend to used less tools, and were less capable at "unstucking" themselves
+- That being said, I see a lot of potential in smaller models. In one rare example, `qwen2.5-7b` actually [tried](https://github.com/will-pang/osler-mcp/blob/main/benchmarks/evals/tuva_project_demo/2026-01-06/output_qwen2.5%3A7b-ctx32k.csv) to leverage model lineage (see my previous [post](benchmarks.md)) and was able to correctly reason that the downstream table would help answer the question (but sadly didn't end up executing the SQL query using said downstream table)
+- Local models performed better than I thought! I was impressed with `gpt-oss-20b` reasoning/tool-calling capabilities, which means that fine-tuning (smaller) LLMs on tool-use/agentic tasks will only get better and likely [outperform](https://arxiv.org/abs/2512.15943) larger models on domain-specific agentic tasks
