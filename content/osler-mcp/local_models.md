@@ -79,3 +79,5 @@ I then fed the following questions, one at a time:
 | gpt-4-turbo       | 3.8                                                             |
 | gpt-oss-20b       | 8.4 (4.8 removing the one outlier where **35** calls were made) |
 | gwen2.5-7b        | 3.3                                                             |
+
+### 🤓 Observations
