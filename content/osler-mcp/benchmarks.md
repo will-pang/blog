@@ -1,6 +1,6 @@
 ---
 title: On MCP Tools
-date: 2026-12-28
+date: 2025-12-28
 tags:
   - mcp
   - benchmarks
