@@ -63,3 +63,19 @@ I then fed the following questions, one at a time:
 </details>
 
 ### 🏆 Results
+
+<img src="images/local_models_1.png" alt="Synthetic Data" style="width:70%">
+
+| Model             | Partial Credit Awarded (/Failed Responses) |
+| ----------------- | ------------------------------------------ |
+| claude-sonnet-4.5 | 1/2                                        |
+| gpt-4-turbo       | 4/6                                        |
+| gpt-oss-20b       | 0/5                                        |
+| gwen2.5-7b        | 0/8                                        |
+
+| Model             | Average Number of Tools Invoked                                 |
+| ----------------- | --------------------------------------------------------------- |
+| claude-sonnet-4.5 | 7.1                                                             |
+| gpt-4-turbo       | 3.8                                                             |
+| gpt-oss-20b       | 8.4 (4.8 removing the one outlier where **35** calls were made) |
+| gwen2.5-7b        | 3.3                                                             |
