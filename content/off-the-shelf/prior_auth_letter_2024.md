@@ -1,7 +1,7 @@
 ---
 title: Building a prior auth letter generator (in 2024)
 date: 2026-01-17
-draft: true
+private: true
 tags: "llm"
 ---
 
