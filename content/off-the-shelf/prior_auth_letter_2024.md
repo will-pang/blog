@@ -19,7 +19,7 @@ Once a doctor/nurse from the insurance company makes a decision on whether to co
 
 ### Models Used
 
-- Azure GPT4o
+- Azure GPT-4o
 - Medical Named Entity Recognition [[HuggingFace](https://huggingface.co/blaze999/Medical-NER)]
 
 ### Evals
