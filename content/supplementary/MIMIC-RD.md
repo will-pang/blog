@@ -55,15 +55,24 @@ tags: "llm"
            note['entity_context'] = SomeRegex(note['llm_extracted_entities'], note['note_content'], window_size=0)
    ```
 
-3. Then, extract the surrounding context for the extracted entity. You probably want to store it something like this:
+
+## Verifying correctness of extracted entities
+1. To grab the context, we want to transform the note text into a list of sentences. We can first split the text by common sentence terminiators:
+
+```
+def extract_sentences(note):
+   # First, split by common setnence terminators while preserving them
+   sentence_parts = []
+   for part in re.split()
+```
+
+10. Then, extract the surrounding context for the extracted entity. You probably want to store it something like this:
    ```
    note['entity_context'] = [
       {'entity': 'Squamos cell carcinoma', 'context': 'Squamos cell carcinoma of epiglottis, treated with'},
       {'entity': 'Adenocarcinoma', 'context': 'completed ___ ___, adenocarcinoma of stage IV left lung'}, ...
    ]
    ```
-
-## Verifying correctness of extracted entities
 
 ## Benchmarking human annotation
 
