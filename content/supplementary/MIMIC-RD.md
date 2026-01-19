@@ -1,7 +1,7 @@
 ---
 title: MIMIC-RD
 date: 2026-01-18
-private: true
+draft: true
 tags: "llm"
 ---
 
