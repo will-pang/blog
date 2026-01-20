@@ -55,13 +55,13 @@ tags: "llm"
            note['entity_context'] = CustomContextExtractor(note['llm_extracted_entities'], note['note_content'], window_size=0)
    ```
 
-
 ## Verifying correctness of extracted entities
+
 1. To grab the context, we want to transform the note text into a list of sentences. We can first split the text by common sentence terminiators:
 
 ```
 class CustomContextExtractor:
-   def extract_sentences(note):
+   def extract_sentences(self, note):
       # First, split by common setnence terminators while preserving them
       sentence_parts = []
       for part in re.split(r"([.!?])", text):
@@ -95,7 +95,7 @@ class CustomContextExtractor:
          for subpart in re.split(r"[;\n]", part):
             if subpart.strip():
                sentences.append(subpart.strip())
-      
+
       return sentences
 ```
 
@@ -109,7 +109,7 @@ class CustomContextExtractor:
             if entity_lower in sentence.lower():
                 # Found exact match - include surrounding sentences based on window_size
                 return self.get_context_window(sentences, i, window_size)
-   
+
    def get_context_window(self, sentences: List[str], center_index: int, window_size: int):
         start_index = max(0, center_index - window_size)
         end_index = min(len(sentences) - 1, center_index + window_size)
@@ -117,7 +117,7 @@ class CustomContextExtractor:
 
         return " ".join(context_sentences).strip()
 
-   # More sophisitication: Use some sort of fuzzy matching. 
+   # More sophisitication: Use some sort of fuzzy matching.
    # This requires iterating over each sentence, and then checking
    # if each word in the sentence "fuzzy" matches the entity. If it fuzzy matches above
    # a threshold, then we have found a match and we keep the index (where the sentence came
@@ -137,29 +137,31 @@ class CustomContextExtractor:
 ```
 
 3. Finally, we put everything together. You probably want to store it something like this:
-   ```
-   def extract_context(self, entities: List[str], text: str, window_size: int = 0):
 
-        sentences = self.extract_sentences(text)
-
-        results = []
-        for entity in entities:
-            context = self.find_entity_context(entity, sentences, window_size)
-            results.append(
-                {
-                    "entity": entity,
-                    "context": context or "",  # Empty string if no context found
-                }
-            )
    ```
+   class CustomContextExtractor:
+      def extract_context(self, entities: List[str], text: str, window_size: int = 0):
+         sentences = self.extract_sentences(text)
+         results = []
+         for entity in entities:
+               context = self.find_entity_context(entity, sentences, window_size)
+               results.append(
+                  {
+                     "entity": entity,
+                     "context": context or "",  # Empty string if no context found
+                  }
+               )
+   ```
+
    which will store things like this:
+
    ```
    note['entity_context'] = [
       {'entity': 'Squamos cell carcinoma', 'context': 'Squamos cell carcinoma of epiglottis, treated with'},
       {'entity': 'Adenocarcinoma', 'context': 'completed ___ ___, adenocarcinoma of stage IV left lung'}, ...
    ]
    ```
-   
+
    **Note:** If the context is missing, we can be somewhat confident that the LLM hallucinated its response.
 
 ## Benchmarking human annotation
