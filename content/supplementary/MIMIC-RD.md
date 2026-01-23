@@ -12,7 +12,7 @@ tags: "llm"
 1. Download the MIMIC-IV-Note from [PhysioNet](https://www.physionet.org/content/mimic-iv-note/2.2/)(note: you need to complete CITI training before you can use the dataset)
 2. Load the note as a Pandas Dataframe
 3. Group notes by `id` and join the different texts. In this example, I want the `subject_id` to be the outer object, and the inner object to be the `{charttime: note}`
-   ```
+   ```python
    # Pseudocode
    patient_notes = (
     note_df
@@ -24,7 +24,7 @@ tags: "llm"
     )
    ```
 4. Convert to JSON with `id` as the key for better interoperability/better compatibility with LLMs
-   ```
+   ```python
    # Pseudocode
    data = {
     str(patient_id): {
@@ -47,7 +47,7 @@ tags: "llm"
 
 2. Pass each note to the LLM and store the extract entity:
 
-   ```
+   ```python
    # Pseudocode
       for i, (patient_id, patient_data) in enumerate(tqdm(list(patient_notes.items()), desc="Processing cases")):
        for charttime, note in patient_data.items():
@@ -59,7 +59,7 @@ tags: "llm"
 
 1. To grab the context, we want to transform the note text into a list of sentences. We can first split the text by common sentence terminiators:
 
-```
+```python
 class CustomContextExtractor:
    def extract_sentences(self, note):
       # First, split by common setnence terminators while preserving them
@@ -74,7 +74,7 @@ class CustomContextExtractor:
 
 We also want to split by other clinical note deliminiators, such as line breaks and semicolons. To do so:
 
-```
+```python
 class CustomContextExtractor:
    def extract_sentences(self, text):
       # First, split by common setnence terminators while preserving them
@@ -101,7 +101,7 @@ class CustomContextExtractor:
 
 2. Once we've broken up the note into sentences, we want to match the entity to the sentences (i.e., the context). We can look for exact word matches, or use some fuzzy matching:
 
-```
+```python
 class CustomContextExtractor:
    def find_entity_context(self, entity: str, sentences: List[str], window_size):
         entity_lower = entity.lower()
@@ -138,31 +138,31 @@ class CustomContextExtractor:
 
 3. Finally, we put everything together. You probably want to store it something like this:
 
-   ```
-   class CustomContextExtractor:
-      def extract_context(self, entities: List[str], text: str, window_size: int = 0):
-         sentences = self.extract_sentences(text)
-         results = []
-         for entity in entities:
-               context = self.find_entity_context(entity, sentences, window_size)
-               results.append(
-                  {
-                     "entity": entity,
-                     "context": context or "",  # Empty string if no context found
-                  }
-               )
-   ```
+```python
+class CustomContextExtractor:
+   def extract_context(self, entities: List[str], text: str, window_size: int = 0):
+      sentences = self.extract_sentences(text)
+      results = []
+      for entity in entities:
+            context = self.find_entity_context(entity, sentences, window_size)
+            results.append(
+               {
+                  "entity": entity,
+                  "context": context or "",  # Empty string if no context found
+               }
+            )
+```
 
-   which will store things like this:
+which will store things like this:
 
-   ```
-   note['entity_context'] = [
-      {'entity': 'Squamos cell carcinoma', 'context': 'Squamos cell carcinoma of epiglottis, treated with'},
-      {'entity': 'Adenocarcinoma', 'context': 'completed ___ ___, adenocarcinoma of stage IV left lung'}, ...
-   ]
-   ```
+```python
+note['entity_context'] = [
+   {'entity': 'Squamos cell carcinoma', 'context': 'Squamos cell carcinoma of epiglottis, treated with'},
+   {'entity': 'Adenocarcinoma', 'context': 'completed ___ ___, adenocarcinoma of stage IV left lung'}, ...
+]
+```
 
-   **Note:** If the context is missing, we can be somewhat confident that the LLM hallucinated its response.
+**Note:** If the context is missing, we can be somewhat confident that the LLM hallucinated its response.
 
 ## Benchmarking human annotation
 
