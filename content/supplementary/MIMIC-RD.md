@@ -124,16 +124,27 @@ class CustomContextExtractor:
    # from)
 
    # ===== Psuedocode =====
-   # entity_words = set(re.findall(r"\b\w+\b", entity_lower))
-   # for i, sentence in enumerate(sentences):
-   #     sentence_words = set(re.findall(r"\b\w+\b"), entity_lower)
+   def find_entity_context_with_fuzz_matching(self, entity: str, sentences: List[str], window_size):
+      entity_words = set(re.findall(r"\b\w+\b", entity_lower))
+      best_score = 0
+      best_index = -1
+      for i, sentence in enumerate(sentences):
+         sentence_words = set(re.findall(r"\b\w+\b"), entity_lower)
 
-   #     common_words = entity_words & sentence_words
+         common_words = entity_words & sentence_words
 
-   #     best_match_i = i # This updates as a better match gets found
+         # Calculate Jaccard similarity as an example
+         similarity_score = len(common_words)/ (
+               len(entity_words) + len(sentence_words) - len(common_words)
+               )
 
-   #  return self.get_context_window(sentences, best_match_i, window_size)
+         if score > best_score:
+            best_score = score
+            best_match_i = i # This updates as a better match gets found
 
+         if best_match_index >=0:
+            return self.get_context_window(sentences, best_match_i, window_size)
+         return None
 ```
 
 3. Finally, we put everything together. You probably want to store it something like this:
