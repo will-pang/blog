@@ -1,11 +1,14 @@
 ---
-title: MIMIC-RD
-date: 2026-01-18
-draft: true
+title: Can LLMs diagnose rare diseases?
+date: 2026-01-29
+draft: false
 tags: "llm"
 ---
 
-[ML4H Paper](https://openreview.net/pdf?id=CrZyNUfWHp)
+Main Blog Post: [Link](../halfbaked/mining_rare_diseases.md)
+
+**Acknowldegements**:
+This psuedo-code implementation is based off of this [ML4H Paper](https://openreview.net/pdf?id=CrZyNUfWHp) and leverages the [PyHealth](https://pyhealth.readthedocs.io/en/latest/) package.
 
 ## Processing MIMIC-IV Notes
 
@@ -173,16 +176,79 @@ note['entity_context'] = [
 ]
 ```
 
-**Note:** If the context is missing, we can be somewhat confident that the LLM hallucinated its response.
+**Note:** If the context is missing or too short, we can be somewhat confident that the LLM hallucinated its response.
 
-## Benchmarking human annotation
+## Verifying whether extracted entity is a rare disease
 
-| Metric | Name           | Description                                                          |
-| -----: | -------------- | -------------------------------------------------------------------- |
-|     TP | True Positive  | The LLM correctly identified a rare disease annotated by a human.    |
-|     FP | False Positive | The LLM identified a rare disease that was not annotated by a human. |
-|     FN | False Negative | The LLM failed to identify a rare disease annotated by a human.      |
+To validate whether the extracted entity is indeed a rare disease, we compare it with the Orphanet [database](https://www.orpha.net) using retrieval augmented generation techniques.
 
-**Note:** True Negatives are undefined in this setting, as the absence of both LLM and human annotations is not a very meaningful outcome to measure.
+1. We download [Orphanet embedding documents](https://github.com/jhnwu3/RDMA) and utilize FAISS for indexing/searching.
 
-In annotating rare diseases, precision is probably the most useful metric to track.
+```python
+class CustomRareDiseaseRAGVerifier:
+   def create_index_from_embeddings(self, embeddings_file: np.ndarray):
+        self.embedded_documents = np.load(embeddings_file, allow_pickle=True)
+
+        embeddings_list = [
+            np.array(doc["embedding"])
+            for doc in self.embedded_documents
+            if isinstance(doc["embedding"], np.ndarray) and doc["embedding"].size > 0
+        ]
+
+        embeddings_array = np.vstack(embeddings_list).astype(np.float32)
+
+        # Create a FAISS index for the embeddings
+        dimension = embeddings_array.shape[1]
+        self.index = faiss.IndexFlatL2(dimension)
+        self.index.add(embeddings_array)
+```
+
+2. We then need to create a method to embed our extracted entity (i.e., transform text ito a vector) and a search method to
+   query the entity on the indexed Orpahnet embeddings.
+
+   ```python
+   class CustomRareDiseaseRAGVerifier:
+      def query_text(self, text: str) -> np.ndarray:
+        return np.array(list(self.model.embed([text]))[0]).astype(np.float32)
+
+      def search(self, query, k):
+         query_vector = self.query_text(query).reshape(1, -1)
+         distances, indices = self.index.search(query_vector, k)
+
+         return distances, indices
+   ```
+
+3. Finally, we verify whether the extracted entity is a rare disease or not. Here we combine both RAG
+   (which will tell us the top matches) and an LLM
+   (to see if the top matches make sense and make a judgement call on whether this is a rare disease or not).
+
+   ```python
+    def verify_rare_disease(self, term, embeddings_file):
+        self.create_index_from_embeddings(embeddings_file)
+        distances, indices = self.search(term, k=5)
+        context = "\nPotential matches from database:\n" + "\n".join(
+            f"{i+1}. {self.embedded_documents[idx].get('name')} (dist: {dist:.4f})"
+            for i, (idx, dist) in enumerate(zip(indices[0], distances[0]))
+        )
+
+        prompt = f"""Analyze this medical term and determine if it represents a rare disease.
+
+        Term: {term}
+        {context}
+
+        A term should ONLY be considered a rare disease if ALL these criteria are met:
+        1. It is a disease or syndrome (not just a symptom, finding, or condition)
+        2. It is rare (affecting less than 1 in 2000 people)
+        3. There is clear evidence in the context or term itself indicating rarity
+        4. For variants of common diseases, it must be explicitly marked as a rare variant
+        5. The term should align with the type of entries in our rare disease database.
+        6. If there is a partial match, i.e cholangitis vs. sclerosing cholangitis. There must be a mention of its descriptor (sclerosing) in the term itself, otherwise it's invalid match.
+
+        Response format:
+        First line: "DECISION: true" or "DECISION: false"
+        Next lines: Brief explanation of decision"""
+
+        response = self.llm_client.query(prompt, self.system_message).strip().lower()
+
+        return "decision: true" in response.lower()
+   ```
