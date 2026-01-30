@@ -1,7 +1,6 @@
 ---
 title: Can LLMs diagnose rare diseases?
 date: 2026-01-29
-draft: false
 tags: "llm"
 ---
 
