@@ -1,11 +1,10 @@
 ---
-title: Building a prior auth letter generator (in 2024)
-date: 2026-01-17
-draft: true
+title: Leverage LLMs in Healthcare Tasks, a commentary
+date: 2026-03-12
 tags: "llm"
 ---
 
-This is how I did it in 2024, with _commentary from 2026_.
+This is how I did it with a team in 2024, with _commentary from 2026_.
 
 ## Problem Statement
 
@@ -74,6 +73,34 @@ In hindsight, we should have just used some curated a database of medical entiti
 
 ### Objective 3: Plug it back into the letter template and have the LLM make sure it was coherent
 
-This was probably the trickiest component, as piecing all the components together meant a large context-window was required and could just result in the same problems we faced when we tried to feed everything into one prompt.
+Once we had all the medical terminologies simplified, we needed to plug it all back into a letter (on behalf of the health plan) and send it back to the patient/provider! This was probably the trickiest component, as piecing all the components together meant a large context-window was required and could just result in the same problems we faced when we tried to feed everything into one prompt (one-shot). We made a separate API call with this prompt:
 
-**TODO: Talk about fitting everything together, asking the LLM to make sure everything was coherent, retry logics**
+```
+prompt =
+"""
+This is our draft letter: The patient has dry skin (<<<dermatitis>>>), which does not qualify for skin graft treatment.
+
+Please format it the same way as an example letter from Blue Moss Insurance Plan:
+The patient has {condition}, which does not qualify for {treatment} under rule 3(iii) of the Blue Moss health insurance plan.
+
+Additional instructions that you MUST follow:
+- Make sure that all medical conditions are explained with the medical terminologies in (parathenses)
+- We need this letter to be at a sixth grade reading level as evaluated by the Flesch-Kincaid Grade Level test, which is a blended score that measures the ratio of syllables in words as well as the ratio of words in a sentence
+- Remove all <<< >>> symbols
+- (A few other edge cases that the model would forget) Always address the patient by their last name (Mr./Ms)
+"""
+```
+
+While the prompt seemed fool-proof in the beginning (we listed all the instructions!!), in reality we were having a lot of trouble having the model follow the instructions correctly. In particular, the model seemed confused as to why we went through all the trouble of simplying medical terminologies (e.g., putting things in parathenses and `<<< >>>` symbols), and would either end up following the specific instructions (i.e., removing the `<<< >>>`) but rewrite/modify what was within the `<<< >>>` symbols OR ignore the instructions but preserve the work we did in step (1) and (2). tldr; the pipeline went through many automated retry attemps if it failed the eval, and still would not get it right.
+
+One idea we had was to incorporate conversational history, with the idea that in objective (3) it should know the prompts/response from the model in objective (1) and objective (2). We leveraged Langchain's Memory module (v1 Langchain was very clunky), but regardless we were able to see a significant increase in performance (less retries) as the model was able to understand what it previously did and how it relates to the current task.
+
+> _In 2026 terms, this would probably be called (short-term) agentic memory, which is still a very hot topic of research and a challenging problem to tackle_
+
+### Parting thoughts
+
+As someone who has straddled between the extremes of "AI is useless" to "AI is going to take my job away in the next three years", reflecting on the work that I did two years ago when LLM/NLP models was in its nascence and comparing it with the tools available today made me realize a few things:
+
+- A lot of fundamentals are still being built out and will likely stay, so thinking that "models will only get better" != "the experience/knowledge developed today will automatically be obselete a few years from now". _There are still a lot of hard problems to solve!_
+- Agents that perform the best rely on good software (e.g., good design/logging/tracing). For now, I see agents as an incredibly powerful orchestrator with "self-healing/correcting" capabilities, but we still need to continue developing the fundamental building blocks which agents leverage
+- While the market might say otherwise, I think there's still a huge value in being a programmer and learning the fundamentals well. If you're truly interested in computer systems, I don't think you should be discouraged from pursuing CS/going into the field
