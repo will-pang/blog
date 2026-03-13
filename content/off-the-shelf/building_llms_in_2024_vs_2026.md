@@ -1,5 +1,5 @@
 ---
-title: Leverage LLMs in Healthcare Tasks, a commentary
+title: Leverage LLMs in Healthcare Tasks, a commentary (2024 vs 2026)
 date: 2026-03-12
 tags: "llm"
 ---
@@ -99,7 +99,7 @@ One idea we had was to incorporate conversational history, with the idea that in
 
 ### Parting thoughts
 
-As someone who has straddled between the extremes of "AI is useless" to "AI is going to take my job away in the next three years", reflecting on the work that I did two years ago when LLM/NLP models was in its nascence and comparing it with the tools available today made me realize a few things:
+As someone who has straddled between the extremes of "AI is useless" to "AI is going to take my job away in the next three years", reflecting on the work that I did two years ago when LLM/NLP models was about to take off and comparing it with the tools available today made me realize a few things:
 
 - A lot of fundamentals are still being built out and will likely stay, so thinking that "models will only get better" != "the experience/knowledge developed today will automatically be obselete a few years from now". _There are still a lot of hard problems to solve!_
 - Agents that perform the best rely on good software (e.g., good design/logging/tracing). For now, I see agents as an incredibly powerful orchestrator with "self-healing/correcting" capabilities, but we still need to continue developing the fundamental building blocks which agents leverage
